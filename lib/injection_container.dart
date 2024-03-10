@@ -10,6 +10,10 @@ import 'package:news_app/features/daily_news/presentation/bloc/article/remote/re
 final sl = GetIt.instance;
 
 Future<void> initializeDependencies() async {
+  final database =
+      await $FloorAppDatabase.databaseBuilder('app_database.db').build();
+  sl.registerSingleton(database);
+
   //Dio
   sl.registerSingleton<Dio>(Dio());
 
