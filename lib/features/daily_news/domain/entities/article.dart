@@ -22,7 +22,6 @@ class ArticleEntity extends Equatable {
   final String? content;
 
   @override
-  // TODO: implement props
   List<Object?> get props {
     return [
       id,
