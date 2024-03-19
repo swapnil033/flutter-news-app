@@ -3,17 +3,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:news_app/features/daily_news/domain/entities/article.dart';
 import 'package:news_app/features/daily_news/presentation/bloc/article/remote/remote_article_bloc.dart';
+import 'package:news_app/features/daily_news/presentation/bloc/article/remote/remote_article_event.dart';
 import 'package:news_app/features/daily_news/presentation/bloc/article/remote/remote_article_state.dart';
 import 'package:news_app/features/daily_news/presentation/widgets/article_tile.dart';
+import 'package:news_app/injection_container.dart';
 
 class DailyNews extends StatelessWidget {
   const DailyNews({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: _buildAppBar(context),
-      body: _buildBody(),
+    return BlocProvider<RemoteArticlesBloc>(
+      create: (context) => sl()..add(const GetArticles()),
+      child: Scaffold(
+        appBar: _buildAppBar(context),
+        body: _buildBody(),
+      ),
     );
   }
 
