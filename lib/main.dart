@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:news_app/config/routes/routes.dart';
 import 'package:news_app/config/theme/app_themes.dart';
-import 'package:news_app/features/daily_news/presentation/bloc/article/remote/remote_article_bloc.dart';
-import 'package:news_app/features/daily_news/presentation/bloc/article/remote/remote_article_event.dart';
 import 'package:news_app/features/daily_news/presentation/pages/home/daily_news.dart';
 import 'package:news_app/injection_container.dart';
 
