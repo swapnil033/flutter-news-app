@@ -1,16 +1,8 @@
 # news_app
 
-A new Flutter project.
+This project has been created to practice flutter clean architecture coding.
 
-## Getting Started
+I have used [this tutorial video as reference](https://youtu.be/7V_P6dovixg?si=VvnHvaUlIqSmFcXM)
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+the tutorial have used [bloc](https://pub.dev/packages/flutter_bloc) library to manage state changes. 
+I replaced it with [flutter river pod](https://pub.dev/packages/flutter_riverpod) for avoiding boilerplate code.
