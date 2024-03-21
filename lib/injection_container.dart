@@ -11,6 +11,8 @@ import 'package:news_app/features/daily_news/domain/usecases/save_article.dart';
 import 'package:news_app/features/daily_news/presentation/bloc/article/local/local_article_bloc.dart';
 import 'package:news_app/features/daily_news/presentation/bloc/article/remote/remote_article_bloc.dart';
 
+import 'features/daily_news/presentation/provider/article/remote/remote_articles_provider.dart';
+
 final sl = GetIt.instance;
 
 Future<void> initializeDependencies() async {
@@ -40,4 +42,7 @@ Future<void> initializeDependencies() async {
 
   sl.registerFactory<LocalArticleBloc>(
       () => LocalArticleBloc(sl(), sl(), sl()));
+
+  // providers
+  sl.registerSingleton(RemoteArticleNotifier(sl()));
 }

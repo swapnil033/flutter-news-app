@@ -2,25 +2,30 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:news_app/features/daily_news/domain/entities/article.dart';
 import 'package:news_app/features/daily_news/presentation/bloc/article/local/local_article_bloc.dart';
 import 'package:news_app/features/daily_news/presentation/bloc/article/local/local_article_event.dart';
 import 'package:news_app/features/daily_news/presentation/bloc/article/local/local_article_state.dart';
+import 'package:news_app/features/daily_news/presentation/provider/article/local/local_article_provider.dart';
+import 'package:news_app/features/daily_news/presentation/provider/article/local/local_article_provider_state.dart';
 import 'package:news_app/features/daily_news/presentation/widgets/article_tile.dart';
 import 'package:news_app/injection_container.dart';
 
-class SavedArticles extends HookWidget {
-  const SavedArticles({Key? key}) : super(key: key);
+class SavedArticles extends ConsumerStatefulWidget {
+  const SavedArticles({super.key});
 
   @override
+  ConsumerState<SavedArticles> createState() => _SavedArticlesState();
+}
+
+class _SavedArticlesState extends ConsumerState<SavedArticles> {
+  @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => sl<LocalArticleBloc>()..add(const GetSavedArticles()),
-      child: Scaffold(
-        appBar: _buildAppBar(),
-        body: _buildBody(),
-      ),
+    return Scaffold(
+      appBar: _buildAppBar(),
+      body: _buildBody(),
     );
   }
 
@@ -39,16 +44,14 @@ class SavedArticles extends HookWidget {
   }
 
   Widget _buildBody() {
-    return BlocBuilder<LocalArticleBloc, LocalArticleState>(
-      builder: (context, state) {
-        if (state is LocalArticleLoading) {
-          return const Center(child: CupertinoActivityIndicator());
-        } else if (state is LocalArticleDone) {
-          return _buildArticlesList(state.articles!);
-        }
-        return Container();
-      },
-    );
+    var articles = ref.watch(localArticlesProvider);
+
+    switch (articles) {
+      case Loading():
+        return const Center(child: CupertinoActivityIndicator());
+      case Success():
+        return _buildArticlesList(articles.data);
+    }
   }
 
   Widget _buildArticlesList(List<ArticleEntity> articles) {
@@ -78,7 +81,7 @@ class SavedArticles extends HookWidget {
   }
 
   void _onRemoveArticle(BuildContext context, ArticleEntity article) {
-    BlocProvider.of<LocalArticleBloc>(context).add(RemoveArticles(article));
+    ref.read(localArticlesProvider.notifier).deleteArticle(article);
   }
 
   void _onArticlePressed(BuildContext context, ArticleEntity article) {

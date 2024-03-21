@@ -1,27 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:news_app/features/daily_news/domain/entities/article.dart';
 import 'package:news_app/features/daily_news/presentation/bloc/article/local/local_article_bloc.dart';
 import 'package:news_app/injection_container.dart';
+import 'package:news_app/features/daily_news/presentation/provider/article/local/local_article_provider.dart';
 
-import '../../bloc/article/local/local_article_event.dart';
-
-class ArticleDetailsView extends HookWidget {
+class ArticleDetailsView extends ConsumerWidget {
   final ArticleEntity? article;
 
-  const ArticleDetailsView({Key? key, this.article}) : super(key: key);
+  ArticleDetailsView({super.key, this.article});
+
+  late WidgetRef _ref;
 
   @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => sl<LocalArticleBloc>(),
-      child: Scaffold(
-        appBar: _buildAppBar(),
-        body: _buildBody(),
-        floatingActionButton: _buildFloatingActionButton(),
-      ),
+  Widget build(BuildContext context, WidgetRef ref) {
+    _ref = ref;
+
+    return Scaffold(
+      appBar: _buildAppBar(),
+      body: _buildBody(),
+      floatingActionButton: _buildFloatingActionButton(),
     );
   }
 
@@ -114,7 +115,10 @@ class ArticleDetailsView extends HookWidget {
   }
 
   void _onFloatingActionButtonPressed(BuildContext context) {
-    BlocProvider.of<LocalArticleBloc>(context).add(SavedArticles(article!));
+    //BlocProvider.of<LocalArticleBloc>(context).add(SavedArticles(article!));
+
+    _ref.read(localArticlesProvider.notifier).saveArticle(article!);
+
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         backgroundColor: Colors.black,

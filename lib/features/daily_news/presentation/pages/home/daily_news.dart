@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:news_app/features/daily_news/domain/entities/article.dart';
 import 'package:news_app/features/daily_news/presentation/bloc/article/remote/remote_article_bloc.dart';
 import 'package:news_app/features/daily_news/presentation/bloc/article/remote/remote_article_event.dart';
@@ -8,17 +9,17 @@ import 'package:news_app/features/daily_news/presentation/bloc/article/remote/re
 import 'package:news_app/features/daily_news/presentation/widgets/article_tile.dart';
 import 'package:news_app/injection_container.dart';
 
-class DailyNews extends StatelessWidget {
+import '../../provider/article/remote/remote_articles_provider.dart';
+import '../../provider/article/remote/remote_articles_provider_state.dart';
+
+class DailyNews extends ConsumerWidget {
   const DailyNews({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return BlocProvider<RemoteArticlesBloc>(
-      create: (context) => sl()..add(const GetArticles()),
-      child: Scaffold(
-        appBar: _buildAppBar(context),
-        body: _buildBody(),
-      ),
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Scaffold(
+      appBar: _buildAppBar(context),
+      body: _buildBody(ref),
     );
   }
 
@@ -40,30 +41,26 @@ class DailyNews extends StatelessWidget {
     );
   }
 
-  Widget _buildBody() {
-    return BlocBuilder<RemoteArticlesBloc, RemoteArticleState>(
-        builder: (_, state) {
-      if (state is RemoteArticlesLoading) {
+  Widget _buildBody(WidgetRef ref) {
+    var articles = ref.watch(remoteArticlesProvider);
+
+    switch (articles) {
+      case Loading():
         return const Center(child: CupertinoActivityIndicator());
-      }
-      if (state is RemoteArticlesError) {
+      case Error():
         return const Center(child: Icon(Icons.refresh));
-      }
-      if (state is RemoteArticlesDone) {
+      case Success<List<ArticleEntity>?>():
         return ListView.builder(
-          itemCount: state.articles!.length,
+          itemCount: articles.data!.length,
           itemBuilder: (context, index) {
             return ArticleWidget(
-              article: state.articles![index],
+              article: articles.data![index],
               onArticlePressed: (article) =>
                   _onArticlePressed(context, article),
             );
           },
         );
-      }
-
-      return const SizedBox();
-    });
+    }
   }
 
   _onArticlePressed(BuildContext context, ArticleEntity article) {
