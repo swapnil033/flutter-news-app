@@ -3,22 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:news_app/features/daily_news/domain/entities/article.dart';
 import 'package:news_app/features/daily_news/presentation/bloc/article/remote/remote_article_bloc.dart';
-import 'package:news_app/features/daily_news/presentation/bloc/article/remote/remote_article_event.dart';
 import 'package:news_app/features/daily_news/presentation/bloc/article/remote/remote_article_state.dart';
 import 'package:news_app/features/daily_news/presentation/widgets/article_tile.dart';
-import 'package:news_app/injection_container.dart';
 
 class DailyNews extends StatelessWidget {
   const DailyNews({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<RemoteArticlesBloc>(
-      create: (context) => sl()..add(const GetArticles()),
-      child: Scaffold(
-        appBar: _buildAppBar(context),
-        body: _buildBody(),
-      ),
+    return Scaffold(
+      appBar: _buildAppBar(context),
+      body: _buildBody(),
     );
   }
 
@@ -47,10 +42,14 @@ class DailyNews extends StatelessWidget {
         return const Center(child: CupertinoActivityIndicator());
       }
       if (state is RemoteArticlesError) {
-        return const Center(child: Icon(Icons.refresh));
+        return const Center(
+          key: Key('api_error'),
+          child: Icon(Icons.refresh),
+        );
       }
       if (state is RemoteArticlesDone) {
         return ListView.builder(
+          key: const Key('news_data'),
           itemCount: state.articles!.length,
           itemBuilder: (context, index) {
             return ArticleWidget(
