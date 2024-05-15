@@ -4,16 +4,18 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i5;
-import 'dart:convert' as _i7;
-import 'dart:typed_data' as _i8;
+import 'dart:convert' as _i8;
+import 'dart:typed_data' as _i9;
 
-import 'package:http/http.dart' as _i3;
+import 'package:http/http.dart' as _i4;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:news_app/core/resources/data_state.dart' as _i2;
 import 'package:news_app/features/daily_news/domain/entities/article.dart'
     as _i6;
 import 'package:news_app/features/daily_news/domain/repository/article_repository.dart'
-    as _i4;
+    as _i3;
+import 'package:news_app/features/daily_news/domain/usecases/get_article.dart'
+    as _i7;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -36,8 +38,9 @@ class _FakeDataState_0<T> extends _i1.SmartFake implements _i2.DataState<T> {
         );
 }
 
-class _FakeResponse_1 extends _i1.SmartFake implements _i3.Response {
-  _FakeResponse_1(
+class _FakeArticleRepository_1 extends _i1.SmartFake
+    implements _i3.ArticleRepository {
+  _FakeArticleRepository_1(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -46,9 +49,19 @@ class _FakeResponse_1 extends _i1.SmartFake implements _i3.Response {
         );
 }
 
-class _FakeStreamedResponse_2 extends _i1.SmartFake
-    implements _i3.StreamedResponse {
-  _FakeStreamedResponse_2(
+class _FakeResponse_2 extends _i1.SmartFake implements _i4.Response {
+  _FakeResponse_2(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+class _FakeStreamedResponse_3 extends _i1.SmartFake
+    implements _i4.StreamedResponse {
+  _FakeStreamedResponse_3(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -60,7 +73,7 @@ class _FakeStreamedResponse_2 extends _i1.SmartFake
 /// A class which mocks [ArticleRepository].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockArticleRepository extends _i1.Mock implements _i4.ArticleRepository {
+class MockArticleRepository extends _i1.Mock implements _i3.ArticleRepository {
   MockArticleRepository() {
     _i1.throwOnMissingStub(this);
   }
@@ -115,16 +128,53 @@ class MockArticleRepository extends _i1.Mock implements _i4.ArticleRepository {
       ) as _i5.Future<List<_i6.ArticleEntity>>);
 }
 
+/// A class which mocks [GetArticleUseCase].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockGetArticleUseCase extends _i1.Mock implements _i7.GetArticleUseCase {
+  MockGetArticleUseCase() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i3.ArticleRepository get articleRepository => (super.noSuchMethod(
+        Invocation.getter(#articleRepository),
+        returnValue: _FakeArticleRepository_1(
+          this,
+          Invocation.getter(#articleRepository),
+        ),
+      ) as _i3.ArticleRepository);
+
+  @override
+  _i5.Future<_i2.DataState<List<_i6.ArticleEntity>>> call({dynamic params}) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #call,
+          [],
+          {#params: params},
+        ),
+        returnValue: _i5.Future<_i2.DataState<List<_i6.ArticleEntity>>>.value(
+            _FakeDataState_0<List<_i6.ArticleEntity>>(
+          this,
+          Invocation.method(
+            #call,
+            [],
+            {#params: params},
+          ),
+        )),
+      ) as _i5.Future<_i2.DataState<List<_i6.ArticleEntity>>>);
+}
+
 /// A class which mocks [Client].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockHttpClient extends _i1.Mock implements _i3.Client {
+class MockHttpClient extends _i1.Mock implements _i4.Client {
   MockHttpClient() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i5.Future<_i3.Response> head(
+  _i5.Future<_i4.Response> head(
     Uri? url, {
     Map<String, String>? headers,
   }) =>
@@ -134,7 +184,7 @@ class MockHttpClient extends _i1.Mock implements _i3.Client {
           [url],
           {#headers: headers},
         ),
-        returnValue: _i5.Future<_i3.Response>.value(_FakeResponse_1(
+        returnValue: _i5.Future<_i4.Response>.value(_FakeResponse_2(
           this,
           Invocation.method(
             #head,
@@ -142,10 +192,10 @@ class MockHttpClient extends _i1.Mock implements _i3.Client {
             {#headers: headers},
           ),
         )),
-      ) as _i5.Future<_i3.Response>);
+      ) as _i5.Future<_i4.Response>);
 
   @override
-  _i5.Future<_i3.Response> get(
+  _i5.Future<_i4.Response> get(
     Uri? url, {
     Map<String, String>? headers,
   }) =>
@@ -155,7 +205,7 @@ class MockHttpClient extends _i1.Mock implements _i3.Client {
           [url],
           {#headers: headers},
         ),
-        returnValue: _i5.Future<_i3.Response>.value(_FakeResponse_1(
+        returnValue: _i5.Future<_i4.Response>.value(_FakeResponse_2(
           this,
           Invocation.method(
             #get,
@@ -163,14 +213,14 @@ class MockHttpClient extends _i1.Mock implements _i3.Client {
             {#headers: headers},
           ),
         )),
-      ) as _i5.Future<_i3.Response>);
+      ) as _i5.Future<_i4.Response>);
 
   @override
-  _i5.Future<_i3.Response> post(
+  _i5.Future<_i4.Response> post(
     Uri? url, {
     Map<String, String>? headers,
     Object? body,
-    _i7.Encoding? encoding,
+    _i8.Encoding? encoding,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -182,7 +232,7 @@ class MockHttpClient extends _i1.Mock implements _i3.Client {
             #encoding: encoding,
           },
         ),
-        returnValue: _i5.Future<_i3.Response>.value(_FakeResponse_1(
+        returnValue: _i5.Future<_i4.Response>.value(_FakeResponse_2(
           this,
           Invocation.method(
             #post,
@@ -194,14 +244,14 @@ class MockHttpClient extends _i1.Mock implements _i3.Client {
             },
           ),
         )),
-      ) as _i5.Future<_i3.Response>);
+      ) as _i5.Future<_i4.Response>);
 
   @override
-  _i5.Future<_i3.Response> put(
+  _i5.Future<_i4.Response> put(
     Uri? url, {
     Map<String, String>? headers,
     Object? body,
-    _i7.Encoding? encoding,
+    _i8.Encoding? encoding,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -213,7 +263,7 @@ class MockHttpClient extends _i1.Mock implements _i3.Client {
             #encoding: encoding,
           },
         ),
-        returnValue: _i5.Future<_i3.Response>.value(_FakeResponse_1(
+        returnValue: _i5.Future<_i4.Response>.value(_FakeResponse_2(
           this,
           Invocation.method(
             #put,
@@ -225,14 +275,14 @@ class MockHttpClient extends _i1.Mock implements _i3.Client {
             },
           ),
         )),
-      ) as _i5.Future<_i3.Response>);
+      ) as _i5.Future<_i4.Response>);
 
   @override
-  _i5.Future<_i3.Response> patch(
+  _i5.Future<_i4.Response> patch(
     Uri? url, {
     Map<String, String>? headers,
     Object? body,
-    _i7.Encoding? encoding,
+    _i8.Encoding? encoding,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -244,7 +294,7 @@ class MockHttpClient extends _i1.Mock implements _i3.Client {
             #encoding: encoding,
           },
         ),
-        returnValue: _i5.Future<_i3.Response>.value(_FakeResponse_1(
+        returnValue: _i5.Future<_i4.Response>.value(_FakeResponse_2(
           this,
           Invocation.method(
             #patch,
@@ -256,14 +306,14 @@ class MockHttpClient extends _i1.Mock implements _i3.Client {
             },
           ),
         )),
-      ) as _i5.Future<_i3.Response>);
+      ) as _i5.Future<_i4.Response>);
 
   @override
-  _i5.Future<_i3.Response> delete(
+  _i5.Future<_i4.Response> delete(
     Uri? url, {
     Map<String, String>? headers,
     Object? body,
-    _i7.Encoding? encoding,
+    _i8.Encoding? encoding,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -275,7 +325,7 @@ class MockHttpClient extends _i1.Mock implements _i3.Client {
             #encoding: encoding,
           },
         ),
-        returnValue: _i5.Future<_i3.Response>.value(_FakeResponse_1(
+        returnValue: _i5.Future<_i4.Response>.value(_FakeResponse_2(
           this,
           Invocation.method(
             #delete,
@@ -287,7 +337,7 @@ class MockHttpClient extends _i1.Mock implements _i3.Client {
             },
           ),
         )),
-      ) as _i5.Future<_i3.Response>);
+      ) as _i5.Future<_i4.Response>);
 
   @override
   _i5.Future<String> read(
@@ -304,7 +354,7 @@ class MockHttpClient extends _i1.Mock implements _i3.Client {
       ) as _i5.Future<String>);
 
   @override
-  _i5.Future<_i8.Uint8List> readBytes(
+  _i5.Future<_i9.Uint8List> readBytes(
     Uri? url, {
     Map<String, String>? headers,
   }) =>
@@ -314,25 +364,25 @@ class MockHttpClient extends _i1.Mock implements _i3.Client {
           [url],
           {#headers: headers},
         ),
-        returnValue: _i5.Future<_i8.Uint8List>.value(_i8.Uint8List(0)),
-      ) as _i5.Future<_i8.Uint8List>);
+        returnValue: _i5.Future<_i9.Uint8List>.value(_i9.Uint8List(0)),
+      ) as _i5.Future<_i9.Uint8List>);
 
   @override
-  _i5.Future<_i3.StreamedResponse> send(_i3.BaseRequest? request) =>
+  _i5.Future<_i4.StreamedResponse> send(_i4.BaseRequest? request) =>
       (super.noSuchMethod(
         Invocation.method(
           #send,
           [request],
         ),
         returnValue:
-            _i5.Future<_i3.StreamedResponse>.value(_FakeStreamedResponse_2(
+            _i5.Future<_i4.StreamedResponse>.value(_FakeStreamedResponse_3(
           this,
           Invocation.method(
             #send,
             [request],
           ),
         )),
-      ) as _i5.Future<_i3.StreamedResponse>);
+      ) as _i5.Future<_i4.StreamedResponse>);
 
   @override
   void close() => super.noSuchMethod(
